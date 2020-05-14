@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>登录</title>
+    <style>
+        * {
+            margin: 0%;
+            padding: 0%;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            background-image: url('https://static.zhihu.com/heifetz/assets/sign_bg.db29b0fb.png');
+            background-color: #b8e5f8;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .box {
+            /* height: ; */
+            width: 400px;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 0 20px;
+            /* box-shadow: 5px 5px 5px rgba(0,0,0,.5); */
+        }
+
+        .box .logo {
+            width: 360px;
+            height: 60px;
+            line-height: 60px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        h3 {
+            display: block;
+            width: 50px;
+            height: 40px;
+            text-align: center;
+            line-height: 40px;
+            border-bottom: 2.5px solid #0084ff;
+        }
+
+        .login input {
+            height: 40px;
+            width: 360px;
+            padding-left: 10px;
+            border: none;
+            outline: none;
+            border-bottom: 1px solid #ccc;
+            margin: 15px auto;
+        }
+
+        .login span a {
+            text-decoration: none;
+            color: #333;
+            font-size: 12px;
+            display: flex;
+            width: 360px;
+            justify-content: flex-end;
+        }
+
+        .login button {
+            width: 360px;
+            height: 40px;
+            background-color: #0084ff;
+            color: #fff;
+            text-align: center;
+            line-height: 40px;
+            border: 0;
+            outline: none;
+            margin: 10px 0px 20px 0px;
+            cursor: pointer;
+
+        }
+
+        .login button:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <div class="logo">
+            Wallent
+        </div>
+        <div class="login">
+            <h3>登录</h3>
+            <input type="text" placeholder="用户名" class="name"></br>
+            <input type="password" placeholder="密码" class="password"></br>
+            <span><a href="#">忘记密码？</a></span>
+            <button class="btn">登录</button></br>
+        </div>
+    </div>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            if(localStorage.getItem('wallent')){
+                window.location.href = 'index.html';
+            };
+            $('.btn').click(function () {
+                $.ajax({
+                    url: 'http://39.106.41.6:3001/login',
+                    type: 'post',
+                    async: 'true',
+                    dataType: 'json',
+                    data: {
+                        name: $('.name').val(),
+                        password: $('.password').val()
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        if(data.status==200){
+                            alert(data.msg);
+                            localStorage.setItem('wallent',data.user_id);
+                            window.location.href = "index.html";
+                        }else{
+                            alert(`${data.msg},请重新输入`);
+                            window.location.href = "login.html";
+                        }
+                    },
+                    err: function () {
+                        console.log(err)
+                    }
+                });
+            });
+        });    
+    </script>
+</body>
+
+</html>

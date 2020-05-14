@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>记账本</title>
+    <link rel="shortcut icon" href="https://bitcoin.org/favicon.ico" />
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_1396762_1xy4vu0tjea.css">
+</head>
+<body>
+    <div class="container">
+        <div class="top">
+            <i style="padding-left:10px;color: #fff;line-height: 50px" class="iconfont icon-qianbao1"><span>记账本</span></i>
+            <span class="id" style="cursor: pointer;font-size: 15px; padding-right: 20px;">请登录</span>
+            
+        </div>
+        <div class="gonggao">
+            <i style="padding-left:10px;line-height: 30px" class="iconfont icon-laba"></i>
+            <span>敢问苍天饶过谁~</span>
+        </div>
+        <div class="content">
+            
+        </div>
+    </div>
+    <script src="https://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script>
+    	if(localStorage.getItem('user_id')){
+            $('.id').html(`<a style="text-decoration:none;color:#fff;" href="admin/index.html">欢迎您，${localStorage.getItem("user_id")}</a>`)
+        }else{
+            $('.id').html(`<a style="text-decoration:none;color:#fff;" href="admin/login.html">请登录！</a>`)
+        };
+        $(document).ready(function(){
+            var list ='';
+            $.ajax({
+                url:'http://39.106.41.6:3002/wallent',
+                type:'get',
+                async:'true',
+                success:function(data){
+                	console.log(data);
+                	$('.gonggao span').html(`敢问苍天饶过谁~ | 剩余金额：<span style="color: red;">${data.money}</span> 元`);
+                    $.each(data.result,(index,item)=>{
+                        if(item.money>0){
+                            var color='';
+                            item.user = '收'
+                            color="green";
+                        }else{
+                            // var color='';
+                            item.user = '支'
+                            color="red";
+                        }
+                        list+=`
+                        <div class="list">
+                            <div class="pic">
+                                <h2>${item.user}</h2>
+                            </div>
+                            <div class="con">
+                                <p style="font-size: 16px;color:#000;">${item.purpose}</p>
+                                <p style="font-size: 14px;color:#333;">${item.remark}</p>
+                                <p style="font-size: 13px;color:#666;">${item.data}</p>
+                            </div>
+                            <div class="money">
+                                <span style="color:${color}">${item.money}</span>
+                            </div>
+                        </div>
+                        `
+                    });
+                    $('.container .content').html(list);
+                },
+                err:function(err){
+                    console.log('发生错误'+err)
+                }
+            });
+        });
+    </script>
+</body>
+</html>
